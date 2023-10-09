@@ -7,7 +7,10 @@ import { auth } from "../../firebase/config";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { SET_ACTIVE_USER } from "../../redux/slice/authSlice";
+import {
+  REMOVE_ACTIVE_USER,
+  SET_ACTIVE_USER,
+} from "../../redux/slice/authSlice";
 
 const logo = (
   <div className={styles.logo}>
@@ -41,23 +44,30 @@ const Header = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // console.log(user);
-        // const uid = user.uid;
-        // console.log(user.displayName);
-        setDisplayName(user.displayName);
+        // if user signin without google then how the name will going to display on home page
+        if (user.displayName == null) {
+          const u1 = user.email.substring(0, user.email.indexOf("@"));
+          const uName = u1.charAt(0).toUpperCase() + u1.slice(1);
+
+          setDisplayName(uName);
+        } else {
+          setDisplayName(user.displayName);
+        }
 
         dispatch(
           SET_ACTIVE_USER({
             email: user.email,
-            userName: user.displayName,
+            userName: user.displayName ? user.displayName : displayName,
             userID: user.uid,
           })
         );
       } else {
         setDisplayName("");
+        // to remove active user from store
+        dispatch(REMOVE_ACTIVE_USER());
       }
     });
-  }, []);
+  }, [dispatch, displayName]);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -118,7 +128,7 @@ const Header = () => {
               <NavLink to="/login" className={activeLink}>
                 Login
               </NavLink>
-              <a href="#" style={{ color: "#ff7722" }}>
+              <a href="#home" style={{ color: "#ff7722" }}>
                 <FaUserCircle size={16} />
                 Hi, {displayName}
               </a>
