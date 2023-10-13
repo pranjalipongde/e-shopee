@@ -12,14 +12,14 @@ import Loader from "../../components/loader/Loader";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cpassword, setCPassword] = useState("");
+  const [cPassword, setCPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const registerUser = (e) => {
     e.preventDefault();
-    if (password !== cpassword) {
+    if (password !== cPassword) {
       toast.error("Password do not match.");
     }
     setIsLoading(true);
@@ -65,7 +65,7 @@ const Register = () => {
                 type="password"
                 placeholder="Confirm Password"
                 required
-                value={cpassword}
+                value={cPassword}
                 onChange={(e) => setCPassword(e.target.value)}
               />
               <button type="submit" className="--btn --btn-primary --btn-block">
