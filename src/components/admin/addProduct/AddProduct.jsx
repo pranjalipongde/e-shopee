@@ -1,7 +1,12 @@
 import { useState } from "react";
 import styles from "./AddProduct.module.scss";
 import Card from "../../card/Card";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { db, storage } from "../../../firebase/config";
 import { toast } from "react-toastify";
 import { Timestamp, addDoc, collection, doc, setDoc } from "firebase/firestore";
@@ -29,6 +34,7 @@ const initialState = {
 const AddProduct = () => {
   const { id } = useParams();
   const products = useSelector(selectProducts);
+  console.log(products);
   const productEdit = products.find((item) => item.id === id);
   console.log(productEdit);
 
@@ -113,7 +119,28 @@ const AddProduct = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    // after editing the image, to delete privious image from the storage
+
+    if (product.imageURL !== productEdit.imageURL) {
+      const storageRef = ref(storage, productEdit.imageURL);
+      deleteObject(storageRef);
+    }
+
     try {
+      setDoc(doc(db, "products", id), {
+        name: product.name,
+        imageURL: product.imageURL,
+        price: Number(product.price),
+        category: product.category,
+        brand: product.brand,
+        desc: product.desc,
+        createdAt: productEdit.createdAt,
+        editedAt: Timestamp.now().toDate(),
+      });
+
+      setIsLoading(false);
+      toast.success("Product Edited Successfully");
+      navigate("/admin/all-products");
     } catch (error) {
       setIsLoading(false);
       toast.error(error.message);

@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
-export const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyCocgsf8PTumTy9W3ZglYvRUS_cXTZJWe0",
   authDomain: "eshopee-ffef3.firebaseapp.com",
   projectId: "eshopee-ffef3",
