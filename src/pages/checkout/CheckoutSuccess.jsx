@@ -8,11 +8,11 @@ const CheckoutSuccess = () => {
         <h2>Checkout Successful</h2>
         <p>Thank you fir your purchase</p>
         <br />
-        <Link to="/order-history">
-          <button className="--btn --btn-primary">
-            View Order Status &#187;
-          </button>
-        </Link>
+
+        <button className="--btn --btn-primary">
+          {" "}
+          <Link to="/order-history">View Order Status &#187;</Link>
+        </button>
       </div>
     </section>
   );
