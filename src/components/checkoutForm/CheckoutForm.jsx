@@ -19,6 +19,7 @@ import {
 import { selectShippingAddress } from "../../redux/slice/checkoutSlice";
 import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutForm = () => {
   const [message, setMessage] = useState(null);
@@ -28,6 +29,7 @@ const CheckoutForm = () => {
   const elements = useElements();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userID = useSelector(selectUserID);
   const userEmail = useSelector(selectEmail);
@@ -69,6 +71,7 @@ const CheckoutForm = () => {
       addDoc(collection(db, "orders"), orderConfig);
       dispatch(CLEAR_CART());
       toast.success("Order Saved");
+      navigate("/checkout-success");
     } catch (error) {
       toast.error(error.message);
     }
@@ -131,6 +134,7 @@ const CheckoutForm = () => {
               <h3>Stripe Checkout</h3>
 
               <PaymentElement id={styles["payment-element"]} />
+
               <button
                 disabled={isLoading || !stripe || !elements}
                 id="submit"
@@ -141,7 +145,7 @@ const CheckoutForm = () => {
                     <img
                       src={spinnerImg}
                       alt="Loading..."
-                      styles={{ width: "20px" }}
+                      style={{ width: "20px" }}
                     />
                   ) : (
                     "Pay now"
