@@ -13,13 +13,19 @@ import {
   selectCartItems,
 } from "../../../redux/slice/cartSlice";
 import useFetchDocument from "../../../customHooks/useFetchDocument";
+import useFetchCollection from "../../../customHooks/useFetchCollection";
+import Card from "../../card/Card";
+import StarsRating from "react-star-rate";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
+
   const { document } = useFetchDocument("products", id);
+  const { data } = useFetchCollection("reviews");
+  const filteredReviews = data.filter((review) => review.productID === id);
 
   const cart = cartItems.find((cart) => cart.id === id);
 
@@ -105,6 +111,38 @@ const ProductDetails = () => {
             </div>
           </>
         )}
+
+        <Card cardClass={styles.card}>
+          <h3>Product Reviews</h3>
+          <div>
+            {filteredReviews.length === 0 ? (
+              <p>
+                There are no reivews for this product yet. Be the first to
+                review!
+              </p>
+            ) : (
+              <>
+                {filteredReviews.map((item, index) => {
+                  const { rate, review, reviewDate, userName } = item;
+
+                  return (
+                    <div className={styles.review}>
+                      <StarsRating value={rate} />
+                      <p>{review}</p>
+                      <span>
+                        <b>{reviewDate}</b>
+                      </span>
+
+                      <span>
+                        <b>by{userName}</b>
+                      </span>
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </div>
+        </Card>
       </div>
     </section>
   );
