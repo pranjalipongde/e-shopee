@@ -1,13 +1,17 @@
 import React, { useEffect } from "react";
-import useFetchCollection from "../../customHooks/useFetchCollection";
-import styles from "./OrderHistory.module.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { STORE_ORDERS, selectOrderHistory } from "../../redux/slice/orderSlice";
-import { selectUserID } from "../../redux/slice/authSlice";
-import Loader from "../../components/loader/Loader";
-import { useNavigate } from "react-router-dom";
+import styles from "./Orders.module.scss";
 
-const OrderHistory = () => {
+import useFetchCollection from "../../../customHooks/useFetchCollection";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  STORE_ORDERS,
+  selectOrderHistory,
+} from "../../../redux/slice/orderSlice";
+import { selectUserID } from "../../../redux/slice/authSlice";
+import Loader from "../../loader/Loader";
+
+const Orders = () => {
   const { data, isLoading } = useFetchCollection("orders");
   const orders = useSelector(selectOrderHistory);
   const userID = useSelector(selectUserID);
@@ -20,23 +24,21 @@ const OrderHistory = () => {
   }, [dispatch, data]);
 
   const handleClick = (id) => {
-    navigate(`/order-details/${id}`);
+    navigate(`/admin/order-details/${id}`);
   };
 
-  const filteredOrders = orders.filter((order) => order.userID === userID);
-
   return (
-    <section>
-      <div className={`container ${styles.order}`}>
+    <>
+      <div className={styles.order}>
         <h2>Your Order History</h2>
         <p>
-          Open an order to leave a <b>Product Review</b>
+          Open an order to <b>Change order status</b>
         </p>
         <br />
         <>
           {isLoading && <Loader />}
           <div className={styles.table}>
-            {filteredOrders.length === 0 ? (
+            {orders.length === 0 ? (
               <p>No order found</p>
             ) : (
               <table>
@@ -50,7 +52,7 @@ const OrderHistory = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredOrders.map((order, index) => {
+                  {orders.map((order, index) => {
                     const {
                       id,
                       orderDate,
@@ -88,8 +90,8 @@ const OrderHistory = () => {
           </div>
         </>
       </div>
-    </section>
+    </>
   );
 };
 
-export default OrderHistory;
+export default Orders;

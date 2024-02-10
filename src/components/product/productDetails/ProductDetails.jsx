@@ -126,7 +126,7 @@ const ProductDetails = () => {
                   const { rate, review, reviewDate, userName } = item;
 
                   return (
-                    <div className={styles.review}>
+                    <div key={index} className={styles.review}>
                       <StarsRating value={rate} />
                       <p>{review}</p>
                       <span>
@@ -134,7 +134,7 @@ const ProductDetails = () => {
                       </span>
 
                       <span>
-                        <b>by{userName}</b>
+                        <b>by : {userName}</b>
                       </span>
                     </div>
                   );
