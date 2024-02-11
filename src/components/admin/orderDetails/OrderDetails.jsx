@@ -3,6 +3,7 @@ import styles from "./OrderDetails.module.scss";
 import useFetchDocument from "../../../customHooks/useFetchDocument";
 import { Link, useParams } from "react-router-dom";
 import spinnerImg from "../../../assets/spinner.jpg";
+import ChangeOrderStatus from "../changeOrderStatus/ChangeOrderStatus";
 
 const OrderDetails = () => {
   const [order, setOrder] = useState(null);
@@ -59,7 +60,6 @@ const OrderDetails = () => {
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Total</th>
-                    <th>Action</th>
                   </tr>
                 </thead>
 
@@ -88,14 +88,6 @@ const OrderDetails = () => {
                         <td>{cartQuantity}</td>
 
                         <td>{(price * cartQuantity).toFixed(2)}</td>
-
-                        <td className={styles.icon}>
-                          <button className="--btn --btn-primary">
-                            <Link to={`/review-product/${id}`}>
-                              Review Product{" "}
-                            </Link>
-                          </button>
-                        </td>
                       </tr>
                     );
                   })}
@@ -103,6 +95,7 @@ const OrderDetails = () => {
               </table>
             </>
           )}
+          <ChangeOrderStatus order={order} id={id} />
         </div>
       </div>
     </>
