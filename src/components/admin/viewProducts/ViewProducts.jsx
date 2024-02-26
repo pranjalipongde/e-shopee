@@ -21,10 +21,30 @@ import {
   selectProducts,
 } from "../../../redux/slice/productSlice";
 import useFetchCollection from "../../../customHooks/useFetchCollection";
+import {
+  FILTER_BY_SEARCH,
+  selectFilteredProduct,
+} from "../../../redux/slice/filterSlice";
+import Search from "../../search/Search";
+import Pagination from "../../pagination/Pagination";
 
 const ViewProducts = () => {
+  const [search, setSearch] = useState("");
   const { data, isLoading } = useFetchCollection("products");
   const products = useSelector(selectProducts);
+  const filteredProducts = useSelector(selectFilteredProduct);
+
+  // pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage, setProductsPerPage] = useState(10);
+
+  // get current product
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
   const dispatch = useDispatch();
 
@@ -35,6 +55,10 @@ const ViewProducts = () => {
       })
     );
   }, [dispatch, data]);
+
+  useEffect(() => {
+    dispatch(FILTER_BY_SEARCH({ products, search }));
+  }, [dispatch, products, search]);
 
   // confirm delete product popup
   const confirmDelete = (id, imageURL) => {
@@ -79,7 +103,14 @@ const ViewProducts = () => {
       <div className={styles.table}>
         <h2>All Products</h2>
 
-        {products.length === 0 ? (
+        <div className={styles.search}>
+          <p>
+            <b>{filteredProducts.length}</b> products found
+          </p>
+          <Search value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
+
+        {filteredProducts.length === 0 ? (
           <p>No product found.</p>
         ) : (
           <table>
@@ -95,7 +126,7 @@ const ViewProducts = () => {
             </thead>
 
             <tbody>
-              {products.map((product, index) => {
+              {currentProducts.map((product, index) => {
                 const { id, name, price, imageURL, category } = product;
                 return (
                   <tr key={id}>
@@ -128,6 +159,13 @@ const ViewProducts = () => {
             </tbody>
           </table>
         )}
+
+        <Pagination
+          productsPerPage={productsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalProducts={filteredProducts.length}
+        />
       </div>
     </>
   );
