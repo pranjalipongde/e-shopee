@@ -21,7 +21,7 @@ const ProductList = ({ products }) => {
 
   // pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(9);
+  const [productsPerPage] = useState(9);
 
   // get current product
   const indexOfLastProduct = currentPage * productsPerPage;

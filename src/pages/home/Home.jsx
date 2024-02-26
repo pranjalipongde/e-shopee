@@ -7,19 +7,18 @@ const Home = () => {
   const url = window.location.href;
   // alert(url);
 
-  const srollToProducts = () => {
-    if (url.includes("#products")) {
-      window.scrollTo({
-        top: 700,
-        behavior: "smooth",
-      });
-      return;
-    }
-  };
-
   useEffect(() => {
+    const srollToProducts = () => {
+      if (url.includes("#products")) {
+        window.scrollTo({
+          top: 700,
+          behavior: "smooth",
+        });
+        return;
+      }
+    };
     srollToProducts();
-  }, []);
+  }, [url]);
 
   return (
     <div>

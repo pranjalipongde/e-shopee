@@ -1,9 +1,7 @@
 import styles from "./ProductDetails.module.scss";
-import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { db } from "../../../firebase/config";
 import spinnerImg from "../../../assets/spinner.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import {
